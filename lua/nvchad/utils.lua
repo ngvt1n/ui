@@ -21,12 +21,11 @@ M.list_themes = function()
 end
 
 M.replace_word = function(old, new, filepath)
-  filepath = filepath or vim.fn.stdpath "config" .. "/lua/" .. "chadrc.lua"
+  filepath = filepath or vim.fn.stdpath "config" .. "/lua/" .. "ui/stl/theme.lua"
 
   local file = io.open(filepath, "r")
   if file then
-    local added_pattern = string.gsub(old, "-", "%%-") -- add % before - if exists
-    local new_content = file:read("*all"):gsub(added_pattern, new)
+    local new_content = [[return function() return ]] .. new .. [[ end]]
 
     file = io.open(filepath, "w")
     file:write(new_content)
@@ -51,6 +50,7 @@ end
 
 M.reload = function(module)
   require("plenary.reload").reload_module "nvconfig"
+  require("plenary.reload").reload_module "ui.stl.theme"
   require("plenary.reload").reload_module "chadrc"
   require("plenary.reload").reload_module "base46"
   require("plenary.reload").reload_module "nvchad"
