@@ -10,7 +10,7 @@ local cur_buf = api.nvim_get_current_buf
 local opts = require("nvconfig").ui.tabufline
 
 local M = {}
-g.toggle_theme_icon = "   "
+g.toggle_theme_icon = " 🌛"
 
 ------------------------------- btn actions functions -----------------------------------
 
@@ -105,9 +105,8 @@ M.tabs = function()
 end
 
 M.btns = function()
-  local toggle_theme = btn(g.toggle_theme_icon, "ThemeToggleBtn", "Toggle_theme")
-  local closeAllBufs = btn(" 󰅖 ", "CloseAllBufsBtn", "CloseAllBufs")
-  return toggle_theme .. closeAllBufs
+  local moon = btn(g.toggle_theme_icon, "TabLine", "Toggle_theme")
+  return moon
 end
 
 return function()
