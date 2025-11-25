@@ -6,8 +6,10 @@ local skipped = require("nvconfig").mason.skip
 M.get_pkgs = function()
   local tools = {}
 
-  local lsps = require("lspconfig.util").available_servers()
-  vim.list_extend(tools, lsps)
+  local native_lsps = vim.tbl_keys(vim.lsp._enabled_configs or {})
+  local lspconfig_lsps = require("lspconfig.util").available_servers()
+  vim.list_extend(tools, lspconfig_lsps)
+  vim.list_extend(tools, native_lsps)
 
   local conform_exists, conform = pcall(require, "conform")
 
@@ -39,6 +41,14 @@ M.get_pkgs = function()
   return pkgs
 end
 
+local function parse_package(package_name)
+  local name, version = package_name:match "^([^@]+)@?(.*)$"
+  return {
+    name = name,
+    version = version ~= "" and version or nil,
+  }
+end
+
 M.install_all = function()
   vim.cmd "Mason"
 
@@ -46,10 +56,11 @@ M.install_all = function()
 
   mr.refresh(function()
     for _, tool in ipairs(M.get_pkgs()) do
-      local p = mr.get_package(tool)
+      local pkg = parse_package(tool)
+      local p = mr.get_package(pkg.name)
 
       if not p:is_installed() then
-        p:install()
+        p:install { version = pkg.version }
       end
     end
   end)

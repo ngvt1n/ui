@@ -35,8 +35,8 @@ CONTENTS                                                         *nvui.contents*
     6.5 Local Themes                                  |nvui.base46.local_themes|
 
  7. `Lsp`                                               |nvui.lsp|
-    5.1 Signature Help                                |nvui.lsp.signature|
-    5.2 Renamer                                       |nvui.lsp.renamer|
+    7.1 Signature Help                                |nvui.lsp.signature|
+    7.2 Renamer                                       |nvui.lsp.renamer|
 
  8. `Colorify`                                          |nvui.colorify|
  
@@ -124,6 +124,7 @@ Base46 setup
 These are the default options for UI/Base46 plugin. No need to write them all 
 Only those you want to change and the it'll override the defaults.
 
+Always check as its Up to date. 
 nvconfig file : |https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua|
 >lua
  {
@@ -142,13 +143,14 @@ nvconfig file : |https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua|
        lspkind_text = true,
        style = "default", -- default/flat_light/flat_dark/atom/atom_colored
        format_colors = {
-         tailwind = false,
+         lsp = true,
        },
      },
  
      telescope = { style = "borderless" }, -- borderless / bordered
  
      statusline = {
+       enabled = true,
        theme = "default", -- default/vscode/vscode_colored/minimal
        -- default/round/block/arrow separators work only for default statusline theme
        -- round and block will work for minimal theme only
@@ -161,6 +163,7 @@ nvconfig file : |https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua|
      tabufline = {
        enabled = true,
        lazyload = true,
+       treeOffsetFt = "NvimTree",
        order = { "treeOffset", "buffers", "tabs", "btns" },
        modules = nil,
        bufwidth = 21,
@@ -193,6 +196,7 @@ nvconfig file : |https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua|
    }
  
    term = {
+     base46_colors = true,
      winopts = { number = false },
      sizes = { sp = 0.3, vsp = 0.2, ["bo sp"] = 0.3, ["bo vsp"] = 0.2 },
      float = {

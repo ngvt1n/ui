@@ -1,6 +1,5 @@
 local M = {}
 local api = vim.api
-local fn = vim.fn
 local get_opt = api.nvim_get_option_value
 local strep = string.rep
 local cur_buf = api.nvim_get_current_buf
@@ -33,10 +32,11 @@ local function new_hl(group1, group2)
   return "%#" .. group1 .. group2 .. "#"
 end
 
-local function gen_unique_name(oldname, index)
+local function gen_unique_name(name, index)
   for i2, nr2 in ipairs(vim.t.bufs) do
-    if index ~= i2 and filename(buf_name(nr2)) == oldname then
-      return fn.fnamemodify(buf_name(vim.t.bufs[index]), ":p:.")
+    local filepath = filename(buf_name(nr2))
+    if index ~= i2 and filepath == name then
+      return vim.fn.fnamemodify(buf_name(vim.t.bufs[index]), ":h:t") .. "/" .. name
     end
   end
 end
@@ -49,8 +49,7 @@ M.style_buf = function(nr, i, w)
   local icon_hl = new_hl("DevIconDefault", tbHlName)
 
   local name = filename(buf_name(nr))
-  name = gen_unique_name(name, i) or name
-  name = (name == "" or not name) and " No Name " or name
+  name = name and (gen_unique_name(name, i) or name) or " No Name "
 
   if name ~= " No Name " then
     local devicon, devicon_hl = require("nvim-web-devicons").get_icon(name)
@@ -65,9 +64,8 @@ M.style_buf = function(nr, i, w)
   local pad = math.floor((w - #name - 5) / 2)
   pad = pad <= 0 and 1 or pad
 
-  local maxname_len = 15
-
-  name = string.sub(name, 1, 13) .. (#name > maxname_len and ".." or "")
+  local maxname_len = w - 5
+  name = string.sub(name, 1, maxname_len - 2) .. (#name > maxname_len and ".." or "")
   name = M.txt(name, tbHlName)
 
   name = strep(" ", pad - 1) .. (icon_hl .. icon .. name) .. strep(" ", pad - 1)

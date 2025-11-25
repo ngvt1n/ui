@@ -1,5 +1,3 @@
-dofile(vim.g.base46_cache .. "term")
-
 local api = vim.api
 local g = vim.g
 local M = {}
@@ -15,7 +13,11 @@ local pos_data = {
 }
 
 local nvconfig = require "nvconfig"
-local config = nvconfig.term or nvconfig.ui.term
+local config = nvconfig.term
+
+if config.base46_colors then
+  dofile(vim.g.base46_cache .. "term")
+end
 
 -- used for initially resizing terms
 vim.g.nvhterm = false
@@ -62,8 +64,11 @@ M.display = function(opts)
   opts.win = win
 
   vim.bo[opts.buf].buflisted = false
-  vim.bo[opts.buf].ft = "NvTerm_"..opts.pos:gsub(" ", "")
-  vim.cmd "startinsert"
+  vim.bo[opts.buf].ft = "NvTerm_" .. opts.pos:gsub(" ", "")
+
+  if config.startinsert then
+    vim.cmd "startinsert"
+  end
 
   -- resize non floating wins initially + or only when they're toggleable
   if (opts.pos == "sp" and not vim.g.nvhterm) or (opts.pos == "vsp" and not vim.g.nvvterm) or (opts.pos ~= "float") then
@@ -102,8 +107,9 @@ local function create(opts)
 
   save_term_info(opts.buf, opts)
 
+  opts.termopen_opts = vim.tbl_extend("force", opts.termopen_opts or {}, { detach = false })
   if not buf_exists then
-    vim.fn.termopen(cmd, opts.termopen_opts or { detach = false })
+    vim.fn.termopen(cmd, opts.termopen_opts)
   end
 
   vim.g.nvhterm = opts.pos == "sp"
@@ -144,7 +150,7 @@ M.runner = function(opts)
     local cmd = format_cmd(opts.cmd)
 
     if x.buf == api.nvim_get_current_buf() then
-      set_buf(g.buf_history[#g.buf_history - 1])
+      vim.cmd "bp"
       cmd = format_cmd(opts.cmd)
       set_buf(x.buf)
     end

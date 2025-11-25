@@ -25,8 +25,8 @@ local M = {
         item.menu_hl_group = "comment"
       end
 
-      if kind == "Color" and cmp_ui.format_colors.tailwind then
-        format_color.tailwind(entry, item, (not (atom_styled or cmp_ui.icons_left) and kind) or "")
+      if kind == "Color" and cmp_ui.format_colors.lsp then
+        format_color.lsp(entry, item, (not (atom_styled or cmp_ui.icons_left) and kind) or "")
       end
 
       if #item.abbr > cmp_ui.abbr_maxwidth then

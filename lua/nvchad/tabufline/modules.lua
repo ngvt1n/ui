@@ -2,8 +2,6 @@ local api = vim.api
 local fn = vim.fn
 local g = vim.g
 
-dofile(vim.g.base46_cache .. "tbline")
-
 local txt = require("nvchad.tabufline.utils").txt
 local btn = require("nvchad.tabufline.utils").btn
 local strep = string.rep
@@ -34,9 +32,9 @@ vim.cmd "function! TbToggleTabs(a,b,c,d) \n let g:TbTabsToggled = !g:TbTabsToggl
 
 ---------------------------------- functions -------------------------------------------
 
-local function getNvimTreeWidth()
+local function getFileTreeWidth()
   for _, win in pairs(api.nvim_tabpage_list_wins(0)) do
-    if vim.bo[api.nvim_win_get_buf(win)].ft == "NvimTree" then
+    if vim.bo[api.nvim_win_get_buf(win)].ft == opts.treeOffsetFt then
       return api.nvim_win_get_width(win)
     end
   end
@@ -59,13 +57,15 @@ end
 ------------------------------------- modules -----------------------------------------
 
 M.treeOffset = function()
-  local w = getNvimTreeWidth()
+  local w = getFileTreeWidth()
   return w == 0 and "" or "%#NvimTreeNormal#" .. strep(" ", w) .. "%#NvimTreeWinSeparator#" .. "│"
 end
 
 M.buffers = function()
   local buffers = {}
   local has_current = false -- have we seen current buffer yet?
+
+  vim.t.bufs = vim.tbl_filter(vim.api.nvim_buf_is_valid, vim.t.bufs)
 
   for i, nr in ipairs(vim.t.bufs) do
     if ((#buffers + 1) * opts.bufwidth) > available_space() then

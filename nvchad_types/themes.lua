@@ -17,12 +17,14 @@ vim.g.nvchad_theme = 'onedark'
 ---| '"tokyonight"'
 ---| '"tokyodark"'
 ---| '"sweetpastel"'
+---| '"sunrise_breeze"'
 ---| '"starlight"'
 ---| '"solarized_osaka"'
 ---| '"solarized_light"'
 ---| '"solarized_dark"'
 ---| '"seoul256_light"'
 ---| '"seoul256_dark"'
+---| '"scaryforest"'
 ---| '"rxyhn"'
 ---| '"rosepine"'
 ---| '"rosepine-dawn"'
@@ -51,6 +53,7 @@ vim.g.nvchad_theme = 'onedark'
 ---| '"monochrome"'
 ---| '"monekai"'
 ---| '"mito-laser"'
+---| '"midnight_breeze"'
 ---| '"melange"'
 ---| '"material-lighter"'
 ---| '"material-deep-ocean"'
@@ -88,6 +91,7 @@ vim.g.nvchad_theme = 'onedark'
 ---| '"chadracula"'
 ---| '"chadracula-evondev"'
 ---| '"catppuccin"'
+---| '"catppuccin-latte"'
 ---| '"carbonfox"'
 ---| '"blossom_light"'
 ---| '"bearded-arc"'
@@ -108,6 +112,7 @@ vim.g.nvchad_theme = 'onedark'
 ---@field ["bearded-arc"]? ThemeTable # Changes for bearded-arc theme
 ---@field blossom_light? ThemeTable # Changes for blossom_light theme
 ---@field carbonfox? ThemeTable # Changes for carbonfox theme
+---@field ["catppuccin-latte"]? ThemeTable # Changes for catppuccin-latte theme
 ---@field catppuccin? ThemeTable # Changes for catppuccin theme
 ---@field ["chadracula-evondev"]? ThemeTable # Changes for chadracula-evondev theme
 ---@field chadracula? ThemeTable # Changes for chadracula theme
@@ -145,6 +150,7 @@ vim.g.nvchad_theme = 'onedark'
 ---@field ["material-deep-ocean"]? ThemeTable # Changes for material-deep-ocean theme
 ---@field ["material-lighter"]? ThemeTable # Changes for material-lighter theme
 ---@field melange? ThemeTable # Changes for melange theme
+---@field midnight_breeze? ThemeTable # Changes for midnight_breeze theme
 ---@field ["mito-laser"]? ThemeTable # Changes for mito-laser theme
 ---@field monekai? ThemeTable # Changes for monekai theme
 ---@field monochrome? ThemeTable # Changes for monochrome theme
@@ -173,12 +179,14 @@ vim.g.nvchad_theme = 'onedark'
 ---@field ["rosepine-dawn"]? ThemeTable # Changes for rosepine-dawn theme
 ---@field rosepine? ThemeTable # Changes for rosepine theme
 ---@field rxyhn? ThemeTable # Changes for rxyhn theme
+---@field scaryforest? ThemeTable # Changes for scaryforest theme
 ---@field ["seoul256_dark"]? ThemeTable # Changes for seoul256_dark theme
 ---@field ["seoul256_light"]? ThemeTable # Changes for seoul256_light theme
 ---@field solarized_dark? ThemeTable # Changes for solarized_dark theme
 ---@field solarized_light? ThemeTable # Changes for solarized_light theme
 ---@field solarized_osaka? ThemeTable # Changes for solarized_osaka theme
 ---@field starlight? ThemeTable # Changes for starlight theme
+---@field sunrise_breeze? ThemeTable # Changes for sunrise_breeze theme
 ---@field sweetpastel? ThemeTable # Changes for sweetpastel theme
 ---@field tokyodark? ThemeTable # Changes for tokyodark theme
 ---@field tokyonight? ThemeTable # Changes for tokyonight theme

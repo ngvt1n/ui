@@ -3,15 +3,17 @@ local api = vim.api
 local cmp_ui = require("nvconfig").ui.cmp
 local icon = cmp_ui.format_colors.icon .. " "
 
-M.tailwind = function(entry, item, kind_txt)
-  local entryItem = entry:get_completion_item()
-  local color = entryItem.documentation
+local hlcache = {}
+
+M.lsp = function(entry, item, kind_txt)
+  local color = entry.completion_item.documentation
 
   if color and type(color) == "string" and color:match "^#%x%x%x%x%x%x$" then
     local hl = "hex-" .. color:sub(2)
 
-    if #api.nvim_get_hl(0, { name = hl }) == 0 then
+    if not hlcache[hl] then
       api.nvim_set_hl(0, hl, { fg = color })
+      hlcache[hl] = true
     end
 
     item.kind = ((cmp_ui.icons_left and icon) or (" " .. icon)) .. kind_txt
