@@ -26,8 +26,8 @@ end
 
 M.file = function()
   local x = utils.file()
-  local name = " " .. x[2] .. (sep_style == "default" and " " or "")
-  return "%#St_file# " .. x[1] .. name .. "%#St_file_sep#" .. sep_r
+  local name = x[2] .. (sep_style == "default" and " " or "")
+  return "%#St_file# " .. name .. "%#St_file_sep#" .. sep_r
 end
 
 M.git = function()
@@ -41,17 +41,42 @@ end
 M.diagnostics = utils.diagnostics
 
 M.lsp = function()
-  return "%#St_Lsp#" .. utils.lsp()
+  if rawget(vim, "lsp") and vim.version().minor >= 10 then
+    for _, client in ipairs(vim.lsp.get_clients()) do
+      if client.attached_buffers[utils.stbufnr()] and client.name ~= "copilot" then
+        return (vim.o.columns > 100 and " %#st_lsp#" .. client.name .. " /") or " %#st_lsp#  /"
+      end
+    end
+  end
+  return ""
 end
+
+M.copilot = function()
+  if rawget(vim, "lsp") and vim.version().minor >= 10 then
+    for _, client in ipairs(vim.lsp.get_clients()) do
+      if client.attached_buffers[utils.stbufnr()] and client.name == "copilot" then
+        local c = require "copilot.client"
+        return (c.is_disabled()) and "" or "%#St_CopilotSep# %#St_Copilot#  %#St_CopilotSep#▌"
+      end
+    end
+  end
+  return ""
+end
+
+M.cursor = "%#St_pos_icon#" .. "%#St_Pos_text# %p%% "
+
 
 M.cwd = function()
-  local icon = "%#St_cwd_icon#" .. "󰉋 "
-  local name = vim.uv.cwd()
+  local icon = "%#St_cwd_text#" .. "󰉋"
+  local name = vim.uv.cwd() or ""
   name = "%#St_cwd_text#" .. " " .. (name:match "([^/\\]+)[/\\]*$" or name) .. " "
-  return (vim.o.columns > 85 and ("%#St_cwd_sep#" .. sep_l .. icon .. name)) or ""
+  return (vim.o.columns > 85 and ("%#St_cwd_sep# " .. icon .. name) .. "/") or ""
 end
 
-M.cursor = "%#St_pos_sep#" .. sep_l .. "%#St_pos_icon# %#St_pos_text# %l/%v "
+M.clock = function()
+  return "/  " .. os.date "%H:%M"
+end
+
 M["%="] = "%="
 
 return function()

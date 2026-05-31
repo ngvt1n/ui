@@ -4,10 +4,12 @@ local g = vim.g
 
 local txt = require("nvchad.tabufline.utils").txt
 local btn = require("nvchad.tabufline.utils").btn
+local face_fn = require("nvchad.tabufline.utils").face_fn
 local strep = string.rep
 local style_buf = require("nvchad.tabufline.utils").style_buf
 local cur_buf = api.nvim_get_current_buf
 local opts = require("nvconfig").ui.tabufline
+local theme = require("nvconfig").ui.statusline.theme
 
 local M = {}
 g.toggle_theme_icon = " 🌛"
@@ -108,6 +110,8 @@ M.btns = function()
   local moon = btn(g.toggle_theme_icon, "TabLine", "Toggle_theme")
   return moon
 end
+
+M.faces = face_fn
 
 return function()
   local result = {}

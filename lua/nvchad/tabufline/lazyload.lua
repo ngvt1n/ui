@@ -10,6 +10,8 @@ vim.t.bufs = vim.t.bufs
     return vim.fn.buflisted(buf) == 1
   end, vim.api.nvim_list_bufs())
 
+local counter = 0
+
 -- autocmds for tabufline -> store bufnrs on bufadd, bufenter events
 -- thx to https://github.com/ii14 & stores buffer per tab -> table
 autocmd({ "BufAdd", "BufEnter", "tabnew" }, {
@@ -59,6 +61,13 @@ autocmd("BufDelete", {
   end,
 })
 
+autocmd("ModeChanged", {
+  group = vim.api.nvim_create_augroup("ModeChangedGroup", { clear = true }),
+  callback = function(_)
+    vim.cmd "redrawtabline"
+  end
+})
+
 if opts.lazyload then
   vim.api.nvim_create_autocmd({ "BufNew", "BufNewFile", "BufRead", "TabEnter", "TermOpen" }, {
     pattern = "*",
@@ -73,6 +82,8 @@ if opts.lazyload then
     end,
   })
 else
+  print(counter)
+  counter = counter + 1
   vim.o.showtabline = 2
   vim.o.tabline = "%!v:lua.require('nvchad.tabufline.modules')()"
   dofile(vim.g.base46_cache .. "tbline")

@@ -36,7 +36,7 @@ local options = {
       enabled = true,
       lazyload = true,
       treeOffsetFt = "NvimTree",
-      order = { "treeOffset", "buffers", "tabs", "btns" },
+      order = { "faces", "buffers", "tabs", "btns" },
       modules = nil,
       bufwidth = 21,
     },

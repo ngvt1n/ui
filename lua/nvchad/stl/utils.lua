@@ -9,8 +9,8 @@ M.is_activewin = function()
 end
 
 local orders = {
-  default = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cwd", "cursor" },
   vscode = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cursor", "cwd" },
+  default = { "mode", "cwd", "git", "%=", "lsp_msg", "diagnostics", "%=", "lsp", "cursor", "clock", "copilot" },
 }
 
 M.generate = function(theme, modules)
@@ -81,16 +81,16 @@ M.modes = {
 
 -- credits to ii14 for str:match func
 M.file = function()
-  local icon = "󰈚"
   local path = vim.api.nvim_buf_get_name(M.stbufnr())
-  local name = (path == "" and "Empty") or path:match "([^/\\]+)[/\\]*$"
+  local icon = path == "" and "" or "󰈚"
+  local name = path == "" and "無" or path:match "([^/\\]+)[/\\]*$"
 
-  if name ~= "Empty" then
+  if path ~= "" then
     local devicons_present, devicons = pcall(require, "nvim-web-devicons")
 
     if devicons_present then
       local ft_icon = devicons.get_icon(name)
-      icon = (ft_icon ~= nil and ft_icon) or icon
+      icon = ((ft_icon ~= nil and ft_icon) or icon) .. " "
     end
   end
 
@@ -155,7 +155,7 @@ M.separators = {
 
 M.state = { lsp_msg = "" }
 
-local spinners = { "", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥", "" }
+M.spinners = { "", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥", "" }
 
 M.autocmds = function()
   vim.api.nvim_create_autocmd("LspProgress", {
@@ -171,7 +171,7 @@ M.autocmds = function()
 
       if data.percentage then
         local idx = math.max(1, math.floor(data.percentage / 10))
-        local icon = spinners[idx]
+        local icon = M.spinners[idx]
         progress = icon .. " " .. data.percentage .. "%% "
       end
 

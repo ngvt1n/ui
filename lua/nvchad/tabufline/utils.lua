@@ -6,6 +6,17 @@ local cur_buf = api.nvim_get_current_buf
 local buf_name = api.nvim_buf_get_name
 local get_hl = api.nvim_get_hl
 
+M.separators = {
+  default = { left = "", right = "" },
+  round = { left = "", right = "" },
+  block = { left = "█", right = "█" },
+  arrow = { left = "", right = "" },
+}
+
+M.is_activewin = function()
+  return vim.api.nvim_get_current_win() == vim.g.statusline_winid
+end
+
 M.txt = function(str, hl)
   str = str or ""
   local a = "%#Tb" .. hl .. "#" .. str
@@ -87,6 +98,71 @@ M.style_buf = function(nr, i, w)
   name = txt(name .. close_btn, "BufO" .. (is_curbuf and "n" or "ff"))
 
   return name
+end
+
+-- 2nd item is highlight groupname St_NormalMode
+M.faces = {
+  ["n"] = { "[❀ ••]모", "Normal" },
+  ["no"] = { "[❀ ••]모(no) ", "Normal" },
+  ["nov"] = { "[❀ ••]모(nov) ", "Normal" },
+  ["noV"] = { "[❀ ••]모(noV) ", "Normal" },
+  ["noCTRL-V"] = { "[❀ ••]모(noC-V) ", "Normal" },
+  ["niI"] = { "niI", "Normal" },
+  ["niR"] = { "niI", "Normal" },
+  ["niV"] = { "niR", "Normal" },
+  ["nt"] = { "nt", "NTerminal" },
+  ["ntT"] = { "ntT", "NTerminal" },
+-- ⬚▧🔲 ⣏⣹ ⛶(╭ರ_•́)
+  ["v"] = { "[❀ 👁👁]v", "Visual" },
+  ["vs"] = { "[❀ 👁👁]N", "Visual" },
+  ["V"] = { "[❀ 👁👁]V", "Visual" },
+  ["Vs"] = { "[❀ 👁👁]VN", "Visual" },
+  [" "] = { "space mode?", "Visual" },
+  [""] = { "[❀ 👁👁]BLOCK ", "Visual" },
+  -- [""] = { "[⊃--]⊃ ", "Visual" },
+
+  ["i"] = { "[❀ ••]φ ", "Insert" },
+  ["ic"] = { "[❀ ••]φ c ", "Insert" },
+  ["ix"] = { "[❀ ••]φ x ", "Insert" },
+
+  ["t"] = { "[■ --]모", "Terminal" },
+
+  ["R"] = { "REPLACE ", "Replace" },
+  ["Rc"] = { "REPLACE [Rc] ", "Replace" },
+  ["Rx"] = { "REPLACEa [Rx] ", "Replace" },
+  ["Rv"] = { "V-REPLACE ", "Replace" },
+  ["Rvc"] = { "V-REPLACE [Rvc] ", "Replace" },
+  ["Rvx"] = { "V-REPLACE [Rvx] ", "Replace" },
+
+  ["s"] = { "SELECT ", "Select" },
+  ["S"] = { "S-LINE ", "Select" },
+  -- [""] = { "S-BLOCK ", "Select" },
+  ["c"] = { "[❀ ::]모", "Command" },
+  ["cv"] = { "[❀ ::]모", "Command" },
+  ["ce"] = { "[❀ ::]모", "Command" },
+  ["cr"] = { "[❀ ::]모", "Command" },
+  ["r"] = { "PROMPT ", "Confirm" },
+  ["rm"] = { "MORE ", "Confirm" },
+  ["r?"] = { "CONFIRM ", "Confirm" },
+  ["x"] = { "CONFIRM ", "Confirm" },
+  ["!"] = { "SHELL ", "Terminal" },
+}
+
+M.face_fn = function()
+local config = require("nvconfig").ui.statusline
+local sep_style = config.separator_style
+local sep_r = M.separators[sep_style]["right"]
+  local modes = M.faces
+  if not M.is_activewin() then
+    return ""
+  end
+
+  local m = vim.api.nvim_get_mode().mode
+  -- local current_mode = "%#St_" .. modes[m][2] .. "Mode#" .. modes[m][1]
+  -- local mode_sep1 = "%#St_" .. modes[m][2] .. "ModeSep#" .. sep_r
+  local current_mode = "%#St_CommandMode#" .. modes[m][1]
+  local mode_sep1 = "%#St_CommandModeSep#" .. sep_r
+  return current_mode .. mode_sep1
 end
 
 return M
