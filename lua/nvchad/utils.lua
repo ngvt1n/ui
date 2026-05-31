@@ -55,7 +55,7 @@ M.reload = function(module)
   end
 
   require("plenary.reload").reload_module "nvconfig"
-  require("plenary.reload").reload_module "ui.stl.theme"
+  require("plenary.reload").reload_module "ui.theme"
   require("plenary.reload").reload_module "chadrc"
   require("plenary.reload").reload_module "base46"
   require("plenary.reload").reload_module "nvchad"
