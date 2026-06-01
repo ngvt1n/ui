@@ -12,7 +12,6 @@ local opts = require("nvconfig").ui.tabufline
 local theme = require("nvconfig").ui.statusline.theme
 
 local M = {}
-g.toggle_theme_icon = " 🌛"
 
 ------------------------------- btn actions functions -----------------------------------
 

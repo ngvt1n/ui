@@ -10,6 +10,8 @@ local sep_r = separators["right"]
 
 local M = {}
 
+M.sky = (tonumber(os.date('%H')) > 18 and "🌛" or "🌞") .. " /"
+
 M.mode = function()
   if not utils.is_activewin() then
     return ""
