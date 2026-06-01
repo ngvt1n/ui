@@ -6,11 +6,9 @@ local autocmd = vim.api.nvim_create_autocmd
 
 -- store listed buffers in tab l
 vim.t.bufs = vim.t.bufs
-  or vim.tbl_filter(function(buf)
-    return vim.fn.buflisted(buf) == 1
-  end, vim.api.nvim_list_bufs())
-
-local counter = 0
+    or vim.tbl_filter(function(buf)
+      return vim.fn.buflisted(buf) == 1
+    end, vim.api.nvim_list_bufs())
 
 -- autocmds for tabufline -> store bufnrs on bufadd, bufenter events
 -- thx to https://github.com/ii14 & stores buffer per tab -> table
@@ -24,10 +22,10 @@ autocmd({ "BufAdd", "BufEnter", "tabnew" }, {
     else
       -- check for duplicates
       if
-        not vim.tbl_contains(bufs, args.buf)
-        and (args.event == "BufEnter" or not is_curbuf or get_opt("buflisted", { buf = args.buf }))
-        and api.nvim_buf_is_valid(args.buf)
-        and get_opt("buflisted", { buf = args.buf })
+          not vim.tbl_contains(bufs, args.buf)
+          and (args.event == "BufEnter" or not is_curbuf or get_opt("buflisted", { buf = args.buf }))
+          and api.nvim_buf_is_valid(args.buf)
+          and get_opt("buflisted", { buf = args.buf })
       then
         table.insert(bufs, args.buf)
       end
@@ -61,10 +59,12 @@ autocmd("BufDelete", {
   end,
 })
 
-autocmd("ModeChanged", {
-  group = vim.api.nvim_create_augroup("ModeChangedGroup", { clear = true }),
+autocmd({"CursorMoved", "CursorMovedI", "CursorMovedC"}, {
+  group = vim.api.nvim_create_augroup("UISpinnerTriggerGroup", { clear = true }),
   callback = function(_)
-    vim.cmd "redrawtabline"
+    if vim.g.spinner then
+      vim.cmd "redrawtabline"
+    end
   end
 })
 
@@ -82,8 +82,6 @@ if opts.lazyload then
     end,
   })
 else
-  print(counter)
-  counter = counter + 1
   vim.o.showtabline = 2
   vim.o.tabline = "%!v:lua.require('nvchad.tabufline.modules')()"
   dofile(vim.g.base46_cache .. "tbline")

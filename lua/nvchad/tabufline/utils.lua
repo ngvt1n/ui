@@ -6,11 +6,41 @@ local cur_buf = api.nvim_get_current_buf
 local buf_name = api.nvim_buf_get_name
 local get_hl = api.nvim_get_hl
 
-M.separators = {
+local separators = {
   default = { left = "", right = "" },
-  round = { left = "", right = "" },
+  round = { left = "", right = ")" },
   block = { left = "█", right = "█" },
   arrow = { left = "", right = "" },
+}
+local config = require("nvconfig").ui.statusline
+local sep_style = config.separator_style
+local sep_r = separators[sep_style]["right"]
+
+M.spinners = {
+  sticks = {
+    "-",
+    "/",
+    "|",
+    "\\",
+  },
+  crab = {
+    ".......🦀",
+    ".....🦀..",
+    "..🦀.....",
+    "🦀.......",
+  },
+  gun = {
+    "▄︻デ══━一  ",
+    "▄︻デ══━一  ",
+    "▄︻デ══━一💥 ",
+    "▄︻デ══━一💥 ",
+  },
+  pen = {
+    "✍︎_______",
+    "𓂃____✍︎__",
+    "𓂃_✍︎_____",
+    "𓂃_____✍︎_",
+  }
 }
 
 M.is_activewin = function()
@@ -81,7 +111,7 @@ M.style_buf = function(nr, i, w)
 
   name = strep(" ", pad - 1) .. (icon_hl .. icon .. name) .. strep(" ", pad - 1)
 
-  local close_btn = btn(" 󰅖 ", nil, "KillBuf", nr)
+  local close_btn = btn(" " .. sep_r, nil, "KillBuf", nr)
   name = btn(name, nil, "GoToBuf", nr)
 
   -- modified bufs icon or close icon
@@ -112,7 +142,7 @@ M.faces = {
   ["niV"] = { "niR", "Normal" },
   ["nt"] = { "nt", "NTerminal" },
   ["ntT"] = { "ntT", "NTerminal" },
--- ⬚▧🔲 ⣏⣹ ⛶(╭ರ_•́)
+  -- ⬚▧🔲 ⣏⣹ ⛶(╭ರ_•́)
   ["v"] = { "[❀ 👁👁]v", "Visual" },
   ["vs"] = { "[❀ 👁👁]N", "Visual" },
   ["V"] = { "[❀ 👁👁]V", "Visual" },
@@ -122,10 +152,10 @@ M.faces = {
   -- [""] = { "[⊃--]⊃ ", "Visual" },
 
   ["i"] = { "[❀ ••]φ ", "Insert" },
-  ["ic"] = { "[❀ ••]φ c ", "Insert" },
-  ["ix"] = { "[❀ ••]φ x ", "Insert" },
+  ["ic"] = { "[C ••]φ c ", "Insert" },
+  ["ix"] = { "[X ••]φ x ", "Insert" },
 
-  ["t"] = { "[■ --]모", "Terminal" },
+  ["t"] = { "[❀ ••]모", "Terminal" },
 
   ["R"] = { "REPLACE ", "Replace" },
   ["Rc"] = { "REPLACE [Rc] ", "Replace" },
@@ -147,22 +177,5 @@ M.faces = {
   ["x"] = { "CONFIRM ", "Confirm" },
   ["!"] = { "SHELL ", "Terminal" },
 }
-
-M.face_fn = function()
-local config = require("nvconfig").ui.statusline
-local sep_style = config.separator_style
-local sep_r = M.separators[sep_style]["right"]
-  local modes = M.faces
-  if not M.is_activewin() then
-    return ""
-  end
-
-  local m = vim.api.nvim_get_mode().mode
-  -- local current_mode = "%#St_" .. modes[m][2] .. "Mode#" .. modes[m][1]
-  -- local mode_sep1 = "%#St_" .. modes[m][2] .. "ModeSep#" .. sep_r
-  local current_mode = "%#St_CommandMode#" .. modes[m][1]
-  local mode_sep1 = "%#St_CommandModeSep#" .. sep_r
-  return current_mode .. mode_sep1
-end
 
 return M

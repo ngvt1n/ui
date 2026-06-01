@@ -4,12 +4,13 @@ local g = vim.g
 
 local txt = require("nvchad.tabufline.utils").txt
 local btn = require("nvchad.tabufline.utils").btn
-local face_fn = require("nvchad.tabufline.utils").face_fn
+local faces = require("nvchad.tabufline.utils").faces
+local spinners = require("nvchad.tabufline.utils").spinners
+local is_activewin = require("nvchad.tabufline.utils").is_activewin
 local strep = string.rep
 local style_buf = require("nvchad.tabufline.utils").style_buf
 local cur_buf = api.nvim_get_current_buf
 local opts = require("nvconfig").ui.tabufline
-local theme = require("nvconfig").ui.statusline.theme
 
 local M = {}
 
@@ -21,7 +22,7 @@ vim.cmd [[
   endfunction]]
 
 vim.cmd [[
-  function! TbKillBuf(bufnr,b,c,d) 
+  function! TbKillBuf(bufnr,b,c,d)
     call luaeval('require("nvchad.tabufline").close_buffer(_A)', a:bufnr)
   endfunction]]
 
@@ -110,7 +111,40 @@ M.btns = function()
   return moon
 end
 
-M.faces = face_fn
+local counter = 0
+M.faces = function()
+  local modes = faces
+  if not is_activewin() then
+    return ""
+  end
+
+  local m = vim.api.nvim_get_mode().mode
+  local face = modes[m][1]
+  if vim.g.spinner == 'writing' then
+    local progress = ({
+      "φ  ",
+      "__φ",
+      "_φ ",
+      "__φ",
+      "φ  ",
+      "_φ ",
+    })[counter % 6 + 1]
+
+    face = face:gsub('φ', progress)
+  end
+
+  local res = "%#St_" .. modes[m][2] .. "Mode#" .. face
+  return res
+end
+
+M.spinner = function()
+  local spinner = vim.g.spinner and (spinners[vim.g.spinner][(counter % 5) % 4 + 1] or "") or ""
+  -- local mode_sep1 = "%#St_" .. modes[m][2] .. "ModeSep#" .. sep_r
+  -- local current_mode = "%#St_CommandMode#" .. modes[m][1]
+  -- local mode_sep1 = "%#St_CommandModeSep#" .. sep_r
+  counter = counter + 1
+  return spinner
+end
 
 return function()
   local result = {}
